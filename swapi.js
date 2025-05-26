@@ -1,26 +1,26 @@
-// Código da API StarWars - Versão Refatorada em Português
+
 const http = require('http');
 const https = require('https');
 
-// --- Configurações e Constantes ---
+
 
 const URL_BASE_API = 'https://swapi.dev/api/';
 const PORTA_HTTP = process.env.PORT || 3000;
 
-// Constantes para "Números Mágicos" [cite: 6]
+
 const TIMEOUT_REQUISICAO_MS = 5000;
 const LIMITE_POPULACAO_PLANETA_GRANDE = 1000000000;
 const LIMITE_DIAMETRO_PLANETA_GRANDE = 10000;
 const QTD_NAVES_EXIBIR = 3;
 const ID_MAX_VEICULO_BUSCAR = 4;
 
-// Configurações - Processadas dos argumentos de linha de comando
+
 const ConfiguracaoApp = {
     modoDebug: true,
     timeoutRequisicao: TIMEOUT_REQUISICAO_MS,
 };
 
-// Estado da Aplicação (reduzindo globais) [cite: 8]
+
 const EstadoApp = {
     cache: {},
     contagemErros: 0,
@@ -29,11 +29,11 @@ const EstadoApp = {
     ultimoIdPessoa: 1,
 };
 
-// --- Funções Utilitárias ---
+
 
 /**
- * Registra mensagens apenas se o modo debug estiver ativo.
- * @param {...any} mensagens - As mensagens para registrar.
+ 
+ * @param {...any} mensagens 
  */
 function registrarDebug(...mensagens) {
     if (ConfiguracaoApp.modoDebug) {
@@ -42,21 +42,20 @@ function registrarDebug(...mensagens) {
 }
 
 /**
- * Trata e registra erros de forma consistente. [cite: 10]
- * @param {Error} erro - O objeto de erro.
- * @param {string} contexto - O contexto onde o erro ocorreu.
+ 
+ * @param {Error} erro 
+ * @param {string} contexto 
  */
 function tratarErro(erro, contexto) {
     console.error(`Erro em ${contexto}:`, erro.message);
     EstadoApp.contagemErros++;
 }
 
-// --- Lógica da API SWAPI ---
 
 /**
- * Busca dados da SWAPI, utilizando cache.
- * @param {string} caminhoRecurso - O caminho do recurso (ex: 'people/1').
- * @returns {Promise<object>} Os dados da API.
+
+ * @param {string} caminhoRecurso 
+ * @returns {Promise<object>} 
  */
 async function buscarDadosSwapi(caminhoRecurso) {
     if (EstadoApp.cache[caminhoRecurso]) {
@@ -98,15 +97,13 @@ async function buscarDadosSwapi(caminhoRecurso) {
         });
     }).catch(erro => {
         tratarErro(erro, `buscarDadosSwapi(${caminhoRecurso})`);
-        throw erro; // Propaga o erro.
+        throw erro; 
     });
 }
 
-// --- Funções de Exibição (Responsabilidade Única) --- [cite: 5, 7]
-
 /**
- * Exibe informações de um personagem.
- * @param {object} personagem - O objeto do personagem.
+ 
+ * @param {object} personagem
  */
 function exibirDetalhesPersonagem(personagem) {
     console.log('\n--- Personagem ---');
@@ -120,9 +117,9 @@ function exibirDetalhesPersonagem(personagem) {
 }
 
 /**
- * Exibe informações de uma nave.
- * @param {object} nave - O objeto da nave.
- * @param {number} indice - O índice da nave para exibição.
+ 
+ * @param {object} nave 
+ * @param {number} indice 
  */
 function exibirDetalhesNave(nave, indice) {
     console.log(`\n--- Nave Estelar ${indice + 1} ---`);
@@ -138,8 +135,8 @@ function exibirDetalhesNave(nave, indice) {
 }
 
 /**
- * Exibe informações de um planeta.
- * @param {object} planeta - O objeto do planeta.
+ 
+ * @param {object} planeta
  */
 function exibirDetalhesPlaneta(planeta) {
      console.log(
@@ -151,9 +148,9 @@ function exibirDetalhesPlaneta(planeta) {
 }
 
 /**
- * Exibe informações de um filme.
- * @param {object} filme - O objeto do filme.
- * @param {number} indice - O índice do filme para exibição.
+ 
+ * @param {object} filme
+ * @param {number} indice 
  */
 function exibirDetalhesFilme(filme, indice) {
     console.log(`\n${indice + 1}. ${filme.title} (${filme.release_date})`);
@@ -164,8 +161,7 @@ function exibirDetalhesFilme(filme, indice) {
 }
 
 /**
- * Exibe informações de um veículo.
- * @param {object} veiculo - O objeto do veículo.
+  @param {object} veiculo 
  */
 function exibirDetalhesVeiculo(veiculo) {
     console.log('\n--- Veículo em Destaque ---');
@@ -178,9 +174,7 @@ function exibirDetalhesVeiculo(veiculo) {
     console.log('Passageiros:', veiculo.passengers);
 }
 
-/**
- * Exibe as estatísticas da aplicação.
- */
+
 function exibirEstatisticas() {
     registrarDebug('\n--- Estatísticas ---');
     registrarDebug('Chamadas à API:', EstadoApp.contagemBuscas);
@@ -189,7 +183,7 @@ function exibirEstatisticas() {
     registrarDebug('Contagem de Erros:', EstadoApp.contagemErros);
 }
 
-// --- Funções de Processamento Principal (Responsabilidade Única) --- [cite: 5, 7]
+
 
 async function processarPersonagem() {
     const personagem = await buscarDadosSwapi(`people/${EstadoApp.ultimoIdPessoa}`);
@@ -236,9 +230,7 @@ async function processarVeiculo() {
     }
 }
 
-/**
- * Orquestra a busca e exibição de todos os dados da SWAPI.
- */
+
 async function executarApresentacaoSwapi() {
     try {
         registrarDebug("Iniciando busca de dados...");
@@ -259,7 +251,7 @@ async function executarApresentacaoSwapi() {
     }
 }
 
-// --- Processamento de Argumentos ---
+
 
 function processarArgumentos() {
     const args = process.argv.slice(2);
@@ -275,7 +267,7 @@ function processarArgumentos() {
     }
 }
 
-// --- HTML para o Servidor ---
+
 
 function gerarHtml() {
     return `
@@ -325,7 +317,7 @@ function gerarHtml() {
     `;
 }
 
-// --- Configuração e Inicialização do Servidor HTTP ---
+
 
 function criarServidor() {
     return http.createServer(async (requisicao, resposta) => {
@@ -358,11 +350,9 @@ function criarServidor() {
     });
 }
 
-/**
- * Função principal que inicia a aplicação.
- */
+
 function principal() {
-    processarArgumentos(); // Processa args primeiro
+    processarArgumentos(); 
 
     const servidor = criarServidor();
 
