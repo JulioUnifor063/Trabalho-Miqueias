@@ -224,7 +224,7 @@ async function processarFilmes() {
 }
 
 async function processarVeiculo() {
-    if (EstadoApp.ultimoIdPessoa <= ID_MAX_VEICULO_BUSCAR) {
+    if (EstadoApp.ultimoIdPessoa >= ID_MAX_VEICULO_BUSCAR) {
         const veiculo = await buscarDadosSwapi(`vehicles/${EstadoApp.ultimoIdPessoa}`);
         exibirDetalhesVeiculo(veiculo);
     }
